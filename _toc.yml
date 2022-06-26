@@ -1,0 +1,23 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+- caption: Front Matter
+  chapters:
+  - file: contents/preface
+- caption: Theory
+  chapters:
+  - file: contents/introduction
+# #   - file: contents/introduction
+# #   - file: contents/outline
+# # - caption: PART I
+# #   chapters:
+# #   - file: contents/definitions
+- caption: Appendix
+  chapters:
+  - file: contents/technical-instructions
+  - file: contents/bibliography
+# #   - file: contents/background
+# #   - file: contents/log
