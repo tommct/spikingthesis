@@ -1,5 +1,16 @@
 # Introduction
 
+> *To every thing there is a season, and a time to every purpose under the heaven.* <p style='text-align: right;'>Ecclesiastes 3:1 (KJV)</p>
+
+<p>&nbsp;</p>
+
+> *Timing is everything.* <p style='text-align: right;'>Everyone</p>
+
+```{admonition} Executive Summary
+Despite popular notions of how the brain works via the firing rates of neurons, this is an inefficient way of processing information, especially for intelligent systems that behave in the moment.
+By utilizing time, spiking neural networks coordinate events to induce arbitrarily complex yet precise concepts and behaviors. 
+```
+
 ## Popular notions of how the brain works 
 
 In 2007, as a graduate student in Computational Bioscience and with interests in Machine Learning and Computational Neuroscience, I was fortunate to attend the [Neural Information Processing Systems (NeurIPS) conference](https://neurips.cc/Conferences/2007).
@@ -8,7 +19,7 @@ Of course, the brain is the most obvious neural information processing system, s
 This conference brought together an interdisciplinary cadre of neuroscientists, AI and machine learning experts, statisticians, and many other researchers all with the goal of presenting pieces of the puzzle of how networks of computational units can encode, process, and even learn information.
 
 While I felt an amazing energy and inspiration, I did not fully realize how special and particular the moment was.
-[Geoff Hinton](https://en.wikipedia.org/wiki/Geoffrey_Hinton), [Yoshua Bengio](https://en.wikipedia.org/wiki/Yoshua_Bengio), and [Yann LeCun](https://en.wikipedia.org/wiki/Yann_LeCun) were advocating [deep neural networks](https://en.wikipedia.org/wiki/Deep_learning) where "deep" simply meant anything more than one hidden layer in an [*artificial neural network*](https://en.wikipedia.org/wiki/Artificial_neural_network)---the most popular neural information processing system design in use before that conference and since.
+[Geoff Hinton](https://en.wikipedia.org/wiki/Geoffrey_Hinton), [Yoshua Bengio](https://en.wikipedia.org/wiki/Yoshua_Bengio), and [Yann LeCun](https://en.wikipedia.org/wiki/Yann_LeCun) were advocating [deep neural networks](https://en.wikipedia.org/wiki/Deep_learning) where "deep" simply meant anything more than one hidden layer in an [*artificial neural network (ANN)*](https://en.wikipedia.org/wiki/Artificial_neural_network)---the most popular neural information processing system design in use before that conference and since.
 We will describe these networks and their hidden layers shortly after we discuss neurons, but long story short, the deep architectures these researchers were promoting later earned them the 2018 [Turing Award](https://amturing.acm.org/), computer science's Nobel Prize.
 Their ideas lanched the AI component of the [Fourth Industrial Revolution](https://en.wikipedia.org/wiki/Fourth_Industrial_Revolution).
 Nearly any application of AI you experience today is likely to have a deep neural net behind it.
@@ -20,8 +31,8 @@ It is known that they communicate with each other via abrupt electrochemical eve
 And because these events look "spiky" compared to a neuron's non-firing state in electrophysiology recordings, they are also called *spikes*.
 (See the blips in {numref}`fig-hubel_wiesel_dayan_abbott_tuningcurve`**a**.)
 A neuron fires an action potential, and nearly instantaneously, that spike radiates down its axon and activates the synapses of its target neurons.
-If the neuron doing the spiking is excitatory, then it promotes the target neurons to fire their own action potentials; and if it is inhibitory, it will impede them from spiking.
-In a network context, any one neuron is stimulated by many, even thousands, of other neurons and may have as many targets, so each neuron of the brain is awash in a barrage of inhibitory and excitatory signals.
+If the neuron doing the spiking is excitatory, then it promotes the target neurons to fire their own action potentials; and if it is inhibitory, it will either impede them from spiking or delay their spikes.
+In a network context, any one neuron is stimulated by many, even thousands, of other neurons and may have as many targets, so each neuron of the brain is awash in a barrage of brief blips of inhibitory and excitatory signals.
 
 ### The Rate-Coding Neuron
 
@@ -43,7 +54,7 @@ name: fig-hubel_wiesel_dayan_abbott_tuningcurve
 
 Given the broad understanding of the excitatory and inhibitory mechanisms that drive neurons to fire rapidly or slowly, it is easily accepted that information can be conveyed by a neuron's firing rate.
 Indeed, firing rate *does* convey information and it is this interpretation that drives deep learning systems.
-(Spoiler alert: we will challenge that firing rate should be the principal mechanism for spiking neurons to convey information.)
+<!-- (Spoiler alert: we will challenge that firing rate should be the principal mechanism for spiking neurons to convey information.) -->
 
 ### The Deep Learning Neuron
 
@@ -68,11 +79,11 @@ The activation function shown in {numref}`fig-ann_neuron` is known as a [Rectifi
 when the weighted sum is greater than zero, then the activation or "firing rate" of the neuron is that weighted sum.
 When the weighted sum is less than zero, then the neuron cannot have a negative firing rate, so it emits 0.
 There are actually many different kinds of activation functions, but the ReLU is quite popular because it is intuitively simple, computationally robust, and can yield highly accurate systems {cite}`nwankpaActivationFunctionsComparison2018`.
-(In 2007 when Hinton gave his presentation, he used a [Sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function) activation function and not a ReLU activation function, but the translation that inputs map to the amount of activation remains the same.
+(In 2007 when Hinton gave his presentation, he used a [Sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function) activation function and not a ReLU activation function, but the translation that sum of the inputs map to an amount of activation holds for every ANN neuron.
 Additionally, many activation functions used in AI systems can emit a negative value, discussed later.)
 
 To begin to understand what is so special about this little machine, let us consider the most influential input neurons onto the central neuron.
-Input neurons #2 and #4 have the largest weights as signified by the width of the arrows, so whatever those neurons emit will be magnified by those weights.
+Input neurons #2 and #4 have the largest weights as signified by the width of the arrows, so whatever those neurons emit will be magnified by their respective weights.
 Because the arrow from the second neuron is negative and the arrow from the fourth neuron is positive, when those neurons both emit values of similar magnitudes, they will cancel each other out.
 However, if neuron #2 emits a near-zero value and neuron #4 emits a strong value, then the weighted sum from these two neurons will likely make the whole sum much more positive and induce the central neuron to emit a strong positive value.
 We can say that the central neuron is really sensitive to #4, but only when #2 is not active.
@@ -89,36 +100,39 @@ Over 15 years later, as Google finishes my sentences, the power of these systems
 However, as a neuroscientist, the simplistic abstraction that the function of a neuron is to translate the sum of its inputs into an activation value for subsequent signaling is overreaching.
 Indeed, Deep Learning researchers, including Hinton, readily admit that their conceptualizations of neurons are simplistic, idealized models; that these systems use "neurons that communicate real values rather than discrete spikes of activity" {cite}`hintonNeuralNetworksMachine2012`.
 (See [Hinton's lecture slides](https://www.cs.toronto.edu/~hinton/coursera/lecture1/lec1.pdf), especially pages 21-29.)
-Regardless, the mapping of "discrete spikes of activity" to a real value largely assumes that biological neurons convey and process information via their firing rate.
+Regardless, the mapping of "discrete spikes of activity" to a real value operates under the assumption that biological neurons convey and process information via their firing rate.
 As such, artificial neurons used in deep learning systems collapse time and encapsulate spiking activity of the biological neurons they are modeled after as the inferred firing frequency, which is reported as the artificial neuron's real value.
 
 ## Animals evolved spikes, not continuous functions.
 
 But animals did not evolve signaling networks that use continuously-valued functions. 
 They evolved spikes.
-This implies, therefore, that spikes must be more beneficial to animals than real-value outputs.
+This implies, therefore, that communicating via spikes must be more beneficial to animals than communicating real-values.
 
 ### How biological cells compute
 
 But what do we even mean when we talk about biological neurons emitting spikes or continuous values? 
 It is not like cells know anything about numbers to calculate and convey the value 3.5873.
-In this regard, we have to understand that cells and especially biological neural networks are a form of [wetware](https://en.wikipedia.org/wiki/Wetware_computer).
+In this regard, we have to understand that cells and especially biological neural networks are a form of livewired {cite:p}`LIVEWIRED` [wetware](https://en.wikipedia.org/wiki/Wetware_computer).
 Despite their undetectible size by eye, cells are extraordinarily complex living environments characterized by the dynamical interactions of molecules.
-As such, we can say that metabolic pathways operate as input-output functions.
-Breaking it down further, enzymatic reactions can operate as a series of [molecular logic gates](https://en.wikipedia.org/wiki/Molecular_logic_gate) {cite}`brayWetwareComputerEvery2009`.
-So when thinking about what a cell computes, we can characterize every dynamical change that is experienced by the cell as a computation and quickly fall into the rabbit hole of *pancomputationalism*---"The universe is a computer. Everything computes." {cite}`andersonPancomputationalismComputationalDescription2017`.
+As such, we can say that metabolic pathways operate as input-output functions; *et voilà*, we have computation!
+Continuing in this vein, enzymatic reactions can operate as a series of [molecular logic gates](https://en.wikipedia.org/wiki/Molecular_logic_gate) {cite}`brayWetwareComputerEvery2009`.
+So when thinking about what a cell computes, if we wanted to, we could characterize every dynamical change that is experienced by the cell as a computation and quickly fall into the rabbit hole of *pancomputationalism*---"The universe is a computer. Everything computes." {cite}`andersonPancomputationalismComputationalDescription2017`.
 Obviously, pancomputationalism is too open-ended to be helpful.
-We are only interested in the underlying computations that cells in a communication network perform, and at a granularity to talk about them semantically.
+We are only interested in the underlying computations that cells in a communication network perform and at a meaningful level of granularity.
 
-As shown in {numref}`fig-Integral-Peripheral-and-Surface-Proteins`, cells have a variety of classes of proteins in their cell walls that interface with the external environment.
-An example of the functionality that some of these proteins provide is that they enable cells to attach to neighboring cells.
-Some of these proteins also serve as gate-keepers for the ions and molecules that enter or exit the cell.
+As shown in cartoon form in {numref}`fig-Integral-Peripheral-and-Surface-Proteins`, cells have a variety of classes of transmembrane proteins in their cell walls that interface with the external environment.
+These macromolecules afford a variety of functions.
+Some of these proteins enable cells to attach to neighboring cells.
+When those neighboring cells are of the same type, the attachments serve to build tissues and organs.
+Some of these proteins serve as gate-keepers for the ions and other molecules that enter or exit the cell.
 As a prominent example, all cells have a transmembrane protein known as the [sodium-potassium pump](https://en.wikipedia.org/wiki/Sodium%E2%80%93potassium_pump) that pumps out 3 sodium ions from the cell and pulls in 2 potassium ions using the energy of one ATP molecule ({numref}`fig-Sodium-potassium_pump_and_diffusion`).
 The steady-state of most mammalian cells is to have about 14 times less sodium in the cell than outside and 28 times more potassium inside than outside.
-The differential this pump creates is involved in a number of critical cellular functions {cite}`pirahanchiPhysiologySodiumPotassium2022a`, but for our discussion, we focus on the electrochemical gradient established by this machine and as summarized in {cite:p}`pivovarovNaPumpNeurotransmitter2018`.
+The differential between what is in to what is out that this pump creates is involved in a number of critical cellular functions {cite}`pirahanchiPhysiologySodiumPotassium2022a`, but for our discussion, we focus on the electrochemical gradient established by this machine and as summarized in {cite:p}`pivovarovNaPumpNeurotransmitter2018`.
 Both sodium and potassium are positively charged ions.
 By pumping 3 positively charged ions out for every 2 positively charged ions that it brings in, this mechanism is the main driver that makes cells more negatively charged inside compared to their external environment.
 This difference in electrical charge across the cell membrane is known as the [*membrane potential*](https://en.wikipedia.org/wiki/Membrane_potential).
+The spike that is observed in electrophysiology recordings is reading this membrane potential, which changes abruptly during an action potential.
 
 ```{figure} ./figs/Integral-Peripheral-and-Surface-Proteins.webp
 ---
@@ -143,7 +157,7 @@ Cartoon of the Sodium-Potassium Pump. Center: The pump that actively extrudes 3 
 When sodium channels open, they let in a huge influx of sodium ions because they follow the electrical gradient to the negative cell interior as well as following the concentration gradient that has less sodium inside the cell than outside.
 These sodium channels are voltage-gated meaning that these transmembrane proteins change shape when the cell becomes *less* negative.
 Therefore, this electrical depolarization induces positive feedback: the less negative the cell is, the more sodium channels open up, which depolarizes the cell even more, which opens more sodium channels to let more positively charged sodium channels in....
-This rush of sodium into the cell characterizes the abrupt change in membrane potential, i.e., the spike. 
+This rush of sodium into the cell characterizes the abrupt change in membrane potential, i.e., the onset of the spike. 
 Potassium also plays a role.
 The Hodgkin-Huxley model of the action potential as derived from their work in the giant squid axon describes the voltage-gated conformations that the channels undertake to serve as a gate to allow sodium or potassium ions to pass or not.
 In the case of the sodium channel, there are 4 different conformations and with the potassium channel, there are 2.
@@ -167,7 +181,7 @@ Illustration of the voltage-gated sodium and potassium transmembrane ion channel
 width: 100%
 name: fig-hh_gateprobs
 ---
-The membrane potential (black) during a spike as described by the Hodgkin-Huxley equations from the giant squid axon {cite}`hodgkinQuantitativeDescriptionMembrane1952`. Tick marks are every 3 ms. The colored lines indicate the probability that the gate in a given ion channel protein is open. The green line, for example shows that at spike onset, virtually all $m$-gates of the voltage-gated sodium channels are open and less than 3 ms later, they are closed.
+The membrane potential (black) during a spike as described by the Hodgkin-Huxley equations from the giant squid axon {cite}`hodgkinQuantitativeDescriptionMembrane1952`. Tick marks are every 3 ms. The colored lines indicate the probability that the gate in a given ion channel protein is open (and the fraction of transmembrane proteins that have the gate open in the population of those ion channels). The green line, for example shows that at spike onset, virtually all $m$-gates of the voltage-gated sodium channels are open and less than 3 ms later, they are closed.
 ```
 ````
 `````
