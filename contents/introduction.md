@@ -105,9 +105,11 @@ As such, artificial neurons used in deep learning systems collapse time and enca
 
 ## Animals evolved spikes, not continuous functions.
 
-But animals did not evolve signaling networks that use continuously-valued functions. 
+But animals did not evolve signaling networks that continuously use real-valued functions. 
 They evolved spikes.
-This implies, therefore, that communicating via spikes must be more beneficial to animals than communicating real-values.
+
+Neurons that emit continuous, real-value functions is illustrated in {numref}`fig-TODO`.
+
 
 ### How biological cells compute
 
