@@ -8,7 +8,8 @@
 
 ```{admonition} Executive Summary
 Despite popular notions of how the brain works via the firing rates of neurons, this is an inefficient way of processing information, especially for intelligent systems that behave in the moment.
-By utilizing time, spiking neural networks coordinate events to induce arbitrarily complex yet precise concepts and behaviors. 
+Signals can be integrated in a variety of ways.
+By utilizing time, emitting and responding to specific values at specific times, spiking neural networks coordinate events to induce arbitrarily complex yet precise concepts and behaviors. 
 ```
 
 ## Popular notions of how the brain works 
@@ -41,7 +42,7 @@ When an excitatory threshold is reached, it will spike.
 In electrophysiology recordings, it is possible to observe a neuron spiking rapidly to some stimuli and inhibited or unresponsive to other stimuli.
 Hubel and Wiesel's extraordinary work to illuminate receptive fields and columns of the visual cortex showed that neurons were particularly sensitive to specific patterns {cite}`hubelReceptiveFieldsSingle1959, hubelReceptiveFieldsFunctional1968`.
 (See David Hubel's [Nobel lecture video](https://www.nobelprize.org/prizes/medicine/1981/hubel/lecture/), especially 16 minutes in. One can hear the rapid spikes of the neuron being recorded from.)
-{numref}`fig-hubel_wiesel_dayan_abbott_tuningcurve`**a** shows spikes Hubel and Wiesel recorded from a neuron of a monkey in response to a bar of light moving across its visual field at particular angles. Panel **b** shows the corresponding "tuning curve" of firing rates with respect to deviations from the neuron's most sensitive pattern.
+{numref}`fig-hubel_wiesel_dayan_abbott_tuningcurve`**a** shows spikes Hubel and Wiesel recorded from a neuron of a monkey in response to a bar of light moving across its visual field at particular angles. Panel **b** shows the corresponding ["tuning curve"](https://en.wikipedia.org/wiki/Neuronal_tuning) of firing rates with respect to deviations from the neuron's most sensitive pattern.
 It has also been found that the sensitivity of the tuning curve can be modulated with attention {cite}`treueNeuralCorrelatesAttention2001`. 
 
 ```{figure} ./figs/hubel_wiesel_dayan_abbott_tuningcurve.png
@@ -79,8 +80,8 @@ The activation function shown in {numref}`fig-ann_neuron` is known as a [Rectifi
 when the weighted sum is greater than zero, then the activation or "firing rate" of the neuron is that weighted sum.
 When the weighted sum is less than zero, then the neuron cannot have a negative firing rate, so it emits 0.
 There are actually many different kinds of activation functions, but the ReLU is quite popular because it is intuitively simple, computationally robust, and can yield highly accurate systems {cite}`nwankpaActivationFunctionsComparison2018`.
-(In 2007 when Hinton gave his presentation, he used a [Sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function) activation function and not a ReLU activation function, but the translation that sum of the inputs map to an amount of activation holds for every ANN neuron.
-Additionally, many activation functions used in AI systems can emit a negative value, discussed later.)
+(In 2007 when Hinton gave his presentation, he used a [Sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function) activation function and not a ReLU activation function, but the translation that the sum of the inputs map to an amount of activation holds for every ANN neuron.
+Additionally, some activation functions used in deep learning systems can emit a negative value, discussed later.)
 
 To begin to understand what is so special about this little machine, let us consider the most influential input neurons onto the central neuron.
 Input neurons #2 and #4 have the largest weights as signified by the width of the arrows, so whatever those neurons emit will be magnified by their respective weights.
@@ -100,22 +101,16 @@ Over 15 years later, as Google finishes my sentences, the power of these systems
 However, as a neuroscientist, the simplistic abstraction that the function of a neuron is to translate the sum of its inputs into an activation value for subsequent signaling is overreaching.
 Indeed, Deep Learning researchers, including Hinton, readily admit that their conceptualizations of neurons are simplistic, idealized models; that these systems use "neurons that communicate real values rather than discrete spikes of activity" {cite}`hintonNeuralNetworksMachine2012`.
 (See [Hinton's lecture slides](https://www.cs.toronto.edu/~hinton/coursera/lecture1/lec1.pdf), especially pages 21-29.)
-Regardless, the mapping of "discrete spikes of activity" to a real value operates under the assumption that biological neurons convey and process information via their firing rate.
+Regardless, the mapping of "discrete spikes of activity" to a real value operates under the assumption that biological neurons largely convey and process information via their firing rate.
 As such, artificial neurons used in deep learning systems collapse time and encapsulate spiking activity of the biological neurons they are modeled after as the inferred firing frequency, which is reported as the artificial neuron's real value.
-
-## Animals evolved spikes, not continuous functions.
-
-But animals did not evolve signaling networks that continuously use real-valued functions. 
+But animals did not evolve signaling networks that continuously emit real-values. 
 They evolved spikes.
 
-Neurons that emit continuous, real-value functions is illustrated in {numref}`fig-TODO`.
+## How biological cells compute
 
-
-### How biological cells compute
-
-But what do we even mean when we talk about biological neurons emitting spikes or continuous values? 
+What do we mean when we talk about biological neurons emitting spikes or continuous, real values? 
 It is not like cells know anything about numbers to calculate and convey the value 3.5873.
-In this regard, we have to understand that cells and especially biological neural networks are a form of livewired {cite:p}`LIVEWIRED` [wetware](https://en.wikipedia.org/wiki/Wetware_computer).
+In this regard, we have to understand that cells and especially biological neural networks are a form of livewired [wetware](https://en.wikipedia.org/wiki/Wetware_computer) {cite}`eaglemanLivewiredStoryEverChanging2020`.
 Despite their undetectible size by eye, cells are extraordinarily complex living environments characterized by the dynamical interactions of molecules.
 As such, we can say that metabolic pathways operate as input-output functions; *et voilà*, we have computation!
 Continuing in this vein, enzymatic reactions can operate as a series of [molecular logic gates](https://en.wikipedia.org/wiki/Molecular_logic_gate) {cite}`brayWetwareComputerEvery2009`.
@@ -130,7 +125,7 @@ When those neighboring cells are of the same type, the attachments serve to buil
 Some of these proteins serve as gate-keepers for the ions and other molecules that enter or exit the cell.
 As a prominent example, all cells have a transmembrane protein known as the [sodium-potassium pump](https://en.wikipedia.org/wiki/Sodium%E2%80%93potassium_pump) that pumps out 3 sodium ions from the cell and pulls in 2 potassium ions using the energy of one ATP molecule ({numref}`fig-Sodium-potassium_pump_and_diffusion`).
 The steady-state of most mammalian cells is to have about 14 times less sodium in the cell than outside and 28 times more potassium inside than outside.
-The differential between what is in to what is out that this pump creates is involved in a number of critical cellular functions {cite}`pirahanchiPhysiologySodiumPotassium2022a`, but for our discussion, we focus on the electrochemical gradient established by this machine and as summarized in {cite:p}`pivovarovNaPumpNeurotransmitter2018`.
+The differential between what is inside to what is outside that this pump creates is involved in a number of critical cellular functions {cite}`pirahanchiPhysiologySodiumPotassium2022a`, but for our discussion, we focus on the electrochemical gradient established by this machine and as summarized in {cite:p}`pivovarovNaPumpNeurotransmitter2018`.
 Both sodium and potassium are positively charged ions.
 By pumping 3 positively charged ions out for every 2 positively charged ions that it brings in, this mechanism is the main driver that makes cells more negatively charged inside compared to their external environment.
 This difference in electrical charge across the cell membrane is known as the [*membrane potential*](https://en.wikipedia.org/wiki/Membrane_potential).
@@ -188,15 +183,49 @@ The membrane potential (black) during a spike as described by the Hodgkin-Huxley
 ````
 `````
 
-### Spikes seem computationally inefficient.
+## The importance of time
 
 Spikes are a lot of work for the cell.
-In particular, we can see that action potentials need to be extremely brief (and blips instead of a wide arc) to maintain the sodium-potassium balance.
+In particular, we can see that action potentials need to be extremely brief to maintain the sodium-potassium balance.
 After all, the longer action potentials are in duration---the wider they are, the more sodium enters the cell and the more potassium leaves the cell making it so that the cell has to hydrolyse more ATP to restore homeostasis and keep this effective battery charged.
 In fact, it is estimated that the brain consumes 20% of humans' energy and 75% of the ATP used by grey matter of the brain is from signaling {cite}`laughlinCommunicationNeuronalNetworks2003, wangNeuralEnergySupplyConsumption2017`.
 Collectively, spikes seem expensive.
-So why is there an evolutionary drive for them?
-Why not use some sort of continuous signaling mechanism that deep learning has shown to be so effective?
+
+So, why is there an evolutionary drive for spikes?
+Why do biological cells, with all of their possible ways of performing cell-to-cell communication, not use some sort of real-valued signaling mechanism that deep learning has shown to be so effective?
+
+To begin to answer "why spikes?", we need to remember that organisms behave in the moment.
+They are real-time sensing and reacting systems.
+While a deep neural network (DNN) can take sequential input and integrate input history into its current processing to operate in real-time,
+the input signal is sent through the entire network with each input step.
+This is different to how brains operate with nerve cells spiking under different conditions in specific ways at precise times.
+That is, *spikes are discrete packets of a real-value---the synaptic weight---delivered at particular times to specific targets.*
+Contrastingly, for DNNs to integrate history to better capture context and nuance, they are overparameterized, having perhaps billions of neurons with trillions of connections spread across hundreds of layers.
+In short, by ignoring time, DNNs are brittle {cite}`heavenWhyDeeplearningAIs2019`. 
+Using more parameters and data is a way to capture more nuance in DNNs, but this then requires massive amounts of data and models that are extraordinarily large, leading to inefficiencies in training and deployment {cite}`strubellEnergyPolicyConsiderations2019`.
+Spiking neurons, on the other hand, enable a deliberate, sparse code that can therefore be quite efficient.
+All it takes is activating the right synapses at the right times---the topic of this thesis!
+
+Acknowledging the brittleness of DNNs, Graph Neural Networks (GNNs) is a more flexible approach {cite}`duvenaudConvolutionalNetworksGraphs2015, velickovicGraphAttentionNetworks2018a, xiaGraphLearningSurvey2021`.
+GNNs enable neurons to connect arbitrarily to other neurons, which means the signaling does not flow from layer to layer in a prescribed way as in DNNs.
+Rather, signals may split, skip, or converge in a variety of ways through the network. (A simplistic graph is shown in {numref}`fig-6n-graf`.)
+However, while GNNs enable more dynamic inputs and may be able to utilize fewer parameters and be more efficient than layered DNNs, they remain static models.
+
+```{figure} ./figs/6n-graf.png
+---
+width: 50%
+name: fig-6n-graf
+---
+Example of a simple [graph](https://en.wikipedia.org/wiki/Graph_theory).
+```
+
+### The spiking neuron
+
+Conversely, spiking neural networks can be much smaller
+
+
+## Spikes are real-values in the form of discrete packets: the synaptic event.
+
 
 ### Continuous signaling cell mechanisms and coding
 

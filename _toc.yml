@@ -7,9 +7,10 @@ parts:
 - caption: Front Matter
   chapters:
   - file: contents/preface
-- caption: Theory
+- caption: Event Intelligence
   chapters:
   - file: contents/introduction
+  - file: contents/philosophy
 # #   - file: contents/introduction
 # #   - file: contents/outline
 # # - caption: PART I

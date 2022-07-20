@@ -1,9 +1,17 @@
-# Introduction
+# Philosophy
+
+```{admonition} Executive Summary
+We begin with various definitions and the components that make up any intelligent system.
+We then cast the computational elements of an intelligent system as sensors whose inputs and outputs are information.
+Critically, information operates as a pattern for the sensors.
+In more complex systems, the outputs from earlier sensors serve as more meaningful patterns for subsequent sensors.
+Such sequencing is the mechanism by which intelligent systems build semantic representations.
+```
+
+## Introduction
 
 Signals flowing through computational units to sculpt decision paths underlie all intelligent systems.
 In brains, the computational units are nerve cells that signal each other by activating the synapses between neighboring cells via abrupt electrochemical changes known as *action potentials*, commonly called *spikes*.
-% Spikes are the communication protocol of the brain \cite{rieke_spikes:_1999}. 
-% Despite this seemingly simple cascading protocol where spikes activate synapses of target neurons, which, in turn, impacts those neurons' spiking, we have not unearthed the ``neural code''.
 The spikes in one set of neurons activate synapses in another set of neurons, which, in turn, affects the spiking of their associated neurons, inducing ripples of spiking activity across the system.
 While this cascading protocol is seemingly simple, we have not unearthed the ``neural code'' of how brains compute.
 Indeed, brains likely use spikes in a variety of ways to regulate body functions, induce behaviors, and realize intelligence.
@@ -17,74 +25,30 @@ In particular, we focus on systems built with generic computational units that a
 We present a theory for how artificial systems can and how brains may use neurons that are sensitive to *coincident* spikes.
 We also show how such neurons can self-organize into networks that learn and exhibit generally intelligent behaviors in real-time.
 
-## Thesis outline
-
-We begin with various definitions and the components that make up any intelligent system.
-We then cast the computational elements of an intelligent system as sensors whose inputs and outputs are information.
-Critically, information operates as a pattern for the sensors.
-In more complex systems, the outputs from earlier sensors serve as more meaningful patterns for subsequent sensors.
-Such sequencing is the mechanism by which intelligent systems build semantic representations.
-
-We then show how spiking neural networks (SNNs)---networks composed of neurons that communicate with their neighbors via spikes---are ideally suited for intelligent learning systems, especially those systems that operate in real-time, because these neurons are simultaneously pattern detectors and generators that utilize a common protocol to provide multiple semantic representations in dynamic settings.
-We describe our rationale for not pursuing a rate-based neural code and focus on systems sensitive to the synchronous spikes of multiple neurons onto a target neuron as the source of information sensing and transmission.
-
-To develop coincident-sensitive neurons and networks, we start with homogenous point neurons; homogenous in that the population of neurons have the same statistical firing patterns and ``point'' meaning that they have no morphology such as dendrites.
-We construct measures of coincidence from simulations with these neurons.
-We then construct rules governing the dynamics of a set of spiking neurons that will be used.
-These rules describe a neuron's internal state over time, how it responds to incoming spikes, and how it propagates spikes to its targets.
-Given that we want to promote the recognition of coincident spikes, we develop those learning rules and show how spiking networks can self-organize.
-
-Given our findings from point neuron networks, we explore the impact of modulating a neuron's spiking sensitivity given its spiking history.
-For example, if it has not fired an action potential recently, it can become more sensitive so that it does spike.
-Contrastingly, if it has been quite active and has been rapidly emitting spikes, we can dial its sensitivity down.
-Relatedly, we explore modulating the emitted spike efficacy onto a neuron's targets.
-In this area, we evaluate the effect and possibilities of networks where even when a spike is generated, it is not communicated to all targets.
-As well, we consider setting some targets to receive more spikes than others depending on the source neuron's spiking history.
-In this case, some targets may receive most of the source neuron's spikes while other targets may only receive spikes after the source neuron has generated several rapid spikes.
-
-We also explore possible roles of dendrites.
-We describe how coincident-based detection and processing can be optimized with neurons with dendritic trees that accentuate positive signals with superadditive rules and particular branching structures.
-
-In all of our networks, our neurons follow Dale's Law that loosely states that a neuron acts completely excitatory or inhibitory to all of its synaptic targets \cite{dalePharmacologyNerveEndings1935}.
-(It cannot excite some targets and inhibit others. It has to be one or the other.)
-This allows us to explore the roles of excitation and inhibition more distinctly.
-More to point, we argue that inhibition is not overtly to decrease the firing rate in targets as much as it is to help coordinate synchronous spikes between them. 
-Another option for inhibition is to gate propagating signals entirely.
-
-We then show some working examples of these spiking networks, starting with simple toy problems, to image problems, NLP datasets, and in robotics.
-
-And finally, we discuss the ramifications of this theory.
-We claim that meaning is self-emergent in learning systems.
-This means that a learning system's inputs, its internal computing capabilities, and the way it is taught are critical to how it derives meaning.
-A spiking neuron need not be passive and a network of active, spiking neurons is able to generate and create novel behaviors.
-We realize it in our own lives, living under a spiking brain.
-Therefore, we claim this a Strong AI, closely resembling the way biological brains work.
-As such, there are hypotheses for neuroscience that need further testing and opportunities to develop AIs that interface with humans and behave in a more human-like way.
-
 ## Intelligence and the elements of an intelligent system
 
-We subscribe to \href{https://en.wikipedia.org/wiki/Intelligence}{Wikipedia's definition of *intelligence*} \cite{wikipediacontributorsIntelligenceWikipediaFree2021}, which, at the time of this writing, is:
-\begin{displayquote}
-...[T]he ability to perceive or infer information, and to retain it as knowledge to be applied towards adaptive behaviors within an environment or context.
-\end{displayquote}
+We subscribe to [Wikipedia's definition of *intelligence*](https://en.wikipedia.org/wiki/Intelligence) {cite}`wikipediacontributorsIntelligenceWikipediaFree2021`, which, at the time of this writing, is:
+> ...[T]he ability to perceive or infer information, and to retain it as knowledge to be applied towards adaptive behaviors within an environment or context.
 
 Given this definition, any intelligent system must contain the following:
-\begin{enumerate}
-  \item \textbf{Sensors.} ``The ability to perceive or infer information'' requires the intelligent system to have sensing capabilities to recognize or differentiate information.
-We label any mechanism that performs this function a sensor.
-This may be a programmatic operation or rule; when executed, it ``senses'' an input and provides an output.
-A binary logic gate, for example, operates as a sensor since it monitors for a particular input pattern and emits TRUE or FALSE accordingly.
-We can also say that simple sensors, such as logic gates or rules, can aggregate into more complex groupings, such as circuits, to form more specialized and nuanced sensing.
-Such meta-sensors will be able to perceive or infer more complex forms of information.
 
-The role of sensing is to translate information into more meaningful and operational representations, possibly by transducing signals through other sensors in an encoding and decoding paradigm. 
-  \item \textbf{Memory.} ``...to retain [information] as knowledge'' requires the intelligent system to have some means of storing information, making this content available to inform subsequent actions.
-  \item \textbf{Rational output/action.} ``...to be applied towards adaptive behaviors within an environment or context'' means that an intelligent system provides an output that makes reasonable sense given the context.
-This could be a simple decision or some sort of complex behavior depending on the system's capabilities.
+  1. **Sensors.** "The ability to perceive or infer information" requires the intelligent system to have sensing capabilities to recognize or differentiate information.
+  We label any mechanism that performs this function a sensor.
+  This may be a programmatic operation or rule; when executed, it "senses" an input and provides an output.
+  A binary logic gate, for example, operates as a sensor since it monitors for a particular input pattern and emits TRUE or FALSE accordingly.
+  We can also say that simple sensors, such as logic gates or rules, can aggregate into more complex groupings, such as circuits, to form more specialized and nuanced sensing.
+  Such meta-sensors will be able to perceive or infer more complex forms of information.
+  <br><br>
+  The role of sensing is to translate information into more meaningful and operational representations, possibly by transducing signals through other sensors in an encoding and decoding paradigm. 
+  
+  2. **Memory.** "...to retain [information] as knowledge" requires the intelligent system to have some means of storing information, making this content available to inform subsequent actions.
+  
+  3. **Rational output/action.** "...to be applied towards adaptive behaviors within an environment or context" means that an intelligent system provides an output that makes reasonable sense given the context.
+  This could be a simple decision or some sort of complex behavior depending on the system's capabilities.
 
-It may also be that the system's outputs are not overtly exposed to an external observer.
-Such behaviors may be strategizing, planning, imagining counterfactuals, or predicting possible futures.
-Since these behaviors are *informational*---they add internal meta-data and knowledge---the system may have a recursive or hierarchical characteristic; there must be sensors and memory to deal with the internal meta-information as well as the external information.
+  It may also be that the system's outputs are not overtly exposed to an external observer.
+  Such behaviors may be strategizing, planning, imagining counterfactuals, or predicting possible futures.
+  Since these behaviors are *informational*---they add internal meta-data and knowledge---the system may have a recursive or hierarchical characteristic; there must be sensors and memory to deal with the internal meta-information as well as the external information.
 
 % The particular way information is represented and stored will also be a constraint on how the system can behave.
 \end{enumerate}
